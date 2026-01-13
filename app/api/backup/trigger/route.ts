@@ -24,6 +24,8 @@ export const maxDuration = 60;
 export async function POST(
   request: NextRequest
 ): Promise<NextResponse<TriggerBackupResponse | ApiError>> {
+  let run: BackupRun | null = null;
+
   try {
     const body = (await request.json()) as TriggerBackupRequest;
     const { projectId, type = 'manual', options } = body;
@@ -59,7 +61,7 @@ export async function POST(
     const prefix = sanitizedPrefix || `${validatedType}-backup`;
     const targetEnvironmentId = generateBackupEnvironmentId(prefix);
 
-    const run: BackupRun = {
+    run = {
       id: uuidv4(),
       projectId,
       type: validatedType,
@@ -95,7 +97,12 @@ export async function POST(
       },
     };
 
-    await updateRun(completedRun);
+    try {
+      await updateRun(completedRun);
+    } catch (updateError) {
+      console.error('Failed to update run status:', updateError);
+      // Still return success if backup worked, even if status update failed
+    }
 
     return NextResponse.json({
       success: result.success,
@@ -104,6 +111,21 @@ export async function POST(
     });
   } catch (error) {
     console.error('Backup trigger error:', error);
+
+    // Try to mark run as failed if we have a run record
+    if (run) {
+      try {
+        await updateRun({
+          ...run,
+          status: 'failed',
+          completedAt: new Date().toISOString(),
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      } catch (updateError) {
+        console.error('Failed to update run status on error:', updateError);
+      }
+    }
+
     return NextResponse.json(
       { error: 'Failed to trigger backup. Please try again.' },
       { status: 500 }
