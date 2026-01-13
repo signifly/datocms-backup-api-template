@@ -1,1 +1,1 @@
-export { middleware, middlewareConfig as config } from '@signifly/datocms-backup-api';
+export { middleware, middlewareConfig as config } from '@casperjuel/datocms-backup-api';

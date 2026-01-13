@@ -4,7 +4,7 @@ import {
   verifyApiSecret,
   API_VERSION,
   type HealthResponse,
-} from '@signifly/datocms-backup-api';
+} from '@casperjuel/datocms-backup-api';
 
 export const dynamic = 'force-dynamic';
 

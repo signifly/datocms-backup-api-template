@@ -16,7 +16,7 @@ import {
   type TriggerBackupRequest,
   type TriggerBackupResponse,
   type ApiError,
-} from '@signifly/datocms-backup-api';
+} from '@casperjuel/datocms-backup-api';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;

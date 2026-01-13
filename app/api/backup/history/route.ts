@@ -11,7 +11,7 @@ import {
   validateProjectId,
   type HistoryResponse,
   type ApiError,
-} from '@signifly/datocms-backup-api';
+} from '@casperjuel/datocms-backup-api';
 
 export const dynamic = 'force-dynamic';
 
