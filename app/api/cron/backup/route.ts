@@ -58,8 +58,10 @@ export async function GET(): Promise<NextResponse<CronBackupResponse | { error: 
         };
 
         for (const run of runs) {
-          if (run.status === 'completed' && !lastRuns[run.type]) {
-            lastRuns[run.type] = new Date(run.completedAt || run.startedAt);
+          // Count both completed and in_progress runs to prevent duplicates
+          // if status updates fail
+          if ((run.status === 'completed' || run.status === 'in_progress') && !lastRuns[run.type]) {
+            lastRuns[run.type] = new Date(run.startedAt);
           }
         }
 
