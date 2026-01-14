@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@casperjuel/datocms-backup-api": "^1.0.2",
+    "@casperjuel/datocms-backup-api": "^1.0.3",
     "@vercel/kv": "^3.0.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
