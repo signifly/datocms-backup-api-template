@@ -66,9 +66,15 @@ export async function GET(): Promise<NextResponse<CronBackupResponse | { error: 
         }
 
         const scheduledBackups = getScheduledBackups(config, lastRuns);
-        console.log(`[CRON] Project ${projectId}: ${scheduledBackups.length} backups to run`);
+        console.log(`[CRON] Project ${projectId}: ${scheduledBackups.length} backups due`);
 
-        for (const backup of scheduledBackups) {
+        // Only run ONE backup per cron to avoid timeout (backups take ~200s each)
+        // Priority: daily > weekly > monthly
+        const backupToRun = scheduledBackups[0];
+        if (!backupToRun) continue;
+
+        const backupsToProcess = [backupToRun];
+        for (const backup of backupsToProcess) {
           const targetEnvironmentId = generateBackupEnvironmentId(backup.schedule.prefix);
 
           const run: BackupRun = {
