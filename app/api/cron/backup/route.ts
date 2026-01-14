@@ -106,7 +106,11 @@ export async function GET(): Promise<NextResponse<CronBackupResponse | { error: 
             },
           };
 
-          await updateRun(completedRun);
+          try {
+            await updateRun(completedRun);
+          } catch (updateError) {
+            console.error(`[CRON] Failed to update run status for ${run.id}:`, updateError);
+          }
 
           results.push({
             projectId,
