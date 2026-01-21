@@ -58,9 +58,9 @@ export async function GET(): Promise<NextResponse<CronBackupResponse | { error: 
         };
 
         for (const run of runs) {
-          // Count both completed and in_progress runs to prevent duplicates
-          // if status updates fail
-          if ((run.status === 'completed' || run.status === 'in_progress') && !lastRuns[run.type]) {
+          // Track when each type was last triggered (any status)
+          // We only care if we already started one, not whether it succeeded
+          if (!lastRuns[run.type]) {
             lastRuns[run.type] = new Date(run.startedAt);
           }
         }
