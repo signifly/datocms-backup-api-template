@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",
-    "build": "next build",
+    "build": "npm update @casperjuel/datocms-backup-api && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@casperjuel/datocms-backup-api": "^1.0.3",
+    "@casperjuel/datocms-backup-api": "^1.0.8",
     "@vercel/kv": "^3.0.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
